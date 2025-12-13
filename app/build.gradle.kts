@@ -60,6 +60,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.hilt.android)
     implementation(libs.lottie.compose)
+    implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.navigation.compose)
     ksp(libs.hilt.compoiler.android)
 }

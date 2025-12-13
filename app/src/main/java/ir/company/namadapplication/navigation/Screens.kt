@@ -6,6 +6,7 @@ sealed class Screens(val route: String) {
 
     object SplashScreen: Screens("splashScreen")
     object Home: Screens("home")
+    object Subcategories: Screens("subcat")
 
 
     fun routeWithArgs(vararg args: String) =
