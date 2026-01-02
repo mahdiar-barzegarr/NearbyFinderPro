@@ -2,6 +2,7 @@ package ir.company.namadapplication.ui.screen
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ir.company.namadapplication.navigation.Screens
 import ir.company.namadapplication.viewModel.HomeViewModel
 
 @Composable
@@ -44,13 +47,16 @@ fun HomeScreen(
 
     val titleData by viewModel.data.collectAsState()
 
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xffF8FAFF)),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    )
+    {
         item {
             Column(
                 modifier = Modifier.padding(top = 30.dp),
@@ -91,19 +97,26 @@ fun HomeScreen(
 
         }
         items(titleData) {
-            TitleBox(it.name, it.iconRes, it.color)
+            TitleBox(it.name, it.iconRes, it.color, {
+                navController.navigate(
+                    Screens.Subcategories.paramsWithArgs(it.id.toString())
+                )
+            })
         }
     }
 }
 
 @Composable
-fun TitleBox(title: String, icon: Int, color: Color) {
+fun TitleBox(title: String, icon: Int, color: Color, onClick: () -> Unit) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(168.dp)
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 12.dp)
+            .clickable {
+                onClick()
+            },
         colors = CardDefaults.cardColors(
             containerColor = color
         ),

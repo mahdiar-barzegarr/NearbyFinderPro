@@ -1,32 +1,33 @@
 package ir.company.namadapplication.ui.screen
 
+import android.content.Context
+import android.content.Intent
+import android.location.LocationManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -49,48 +50,54 @@ import kotlinx.coroutines.launch
 fun SplashScreen(
     navController: NavController,
     viewModel: SplashViewModel = hiltViewModel()
-) {
+)
+{
 
-    val VazirFontFamily = FontFamily(
-        Font(R.font.vazirmatn)
-    )
-
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.loading)
-    )
-
+    val context = LocalContext.current
+    val VazirFontFamily = FontFamily(Font(R.font.vazirmatn))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
     var visible by remember { mutableStateOf(false) }
     var buttonEnable by remember { mutableStateOf(true) }
-
     val scope = rememberCoroutineScope()
 
-
-    val netState by viewModel.state.collectAsState()
+    // ---------- States ----------
     val isLoading = viewModel.isLoading.collectAsState()
     val observerInternet = viewModel.observer.online.collectAsState(true)
+    val isGpsEnabled = viewModel.isGpsEnabled.collectAsState()
+    val location by viewModel.savedLocation.collectAsState()
+
+
+
+
+    // ---------- Permission Launcher ----------
+    val locationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+
+            val granted = permissions.any { it.value }
+            if (granted) {
+                viewModel.forceCheckGps()
+                viewModel.fetchUserLocation() // ✅ مهم
+            }
+        }
+
 
 
     LaunchedEffect(Unit) {
         delay(300)
         visible = true
+        locationPermissionLauncher.launch(
+            arrayOf(
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
     }
 
 
 
-    LaunchedEffect(netState) {
-        if (netState == true) {
-            delay(2500)
-            navController.navigate("home") {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
-
-        }
-    }
-
-
+    // ---------- UI ----------
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -101,18 +108,17 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
+            Text(
+                location.toString(),
+                fontSize = 32.sp
+            )
 
             Image(
                 painter = painterResource(R.drawable.icon),
                 contentDescription = null
             )
 
-
-
             Spacer(Modifier.height(16.dp))
-
-
 
             Text(
                 text = "MakanYab",
@@ -124,16 +130,13 @@ fun SplashScreen(
                 textAlign = TextAlign.Center
             )
 
-
             Spacer(Modifier.height(52.dp))
-
 
             AnimatedVisibility(
                 visible = visible,
                 enter = fadeIn(animationSpec = tween(1400)) +
                         scaleIn(animationSpec = tween(1400))
-            )
-            {
+            ) {
                 if (isLoading.value) {
                     LottieAnimation(
                         composition = composition,
@@ -147,29 +150,153 @@ fun SplashScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        OutlinedButton(
-                            {
-                                scope.launch {
-                                    buttonEnable = false
-                                    delay(1000)
-                                    buttonEnable = true
-                                }
-                                if (observerInternet.value) {
-                                    viewModel.retryLoading()
-                                }
-                            },
-                            enabled = buttonEnable
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            Text("تلاش مجدد")
+                            when {
+                                !observerInternet.value && !isGpsEnabled.value -> {
+                                    IconButton({
+                                        context.startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                                    }) {
+                                        Icon(
+                                            Icons.Default.LocationOn,
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .border(1.dp, Color.Black, CircleShape)
+                                                .padding(8.dp)
+                                        )
+                                    }
+                                    IconButton({
+                                        context.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+                                    }) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.wifi),
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .border(1.dp, Color.Black, CircleShape)
+                                                .padding(8.dp)
+                                        )
+                                    }
+                                }
+                                !observerInternet.value -> {
+                                    IconButton({
+                                        context.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+                                    }) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.wifi),
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .border(1.dp, Color.Black, CircleShape)
+                                                .padding(8.dp)
+                                        )
+                                    }
+                                }
+                                !isGpsEnabled.value -> {
+                                    IconButton({
+                                        context.startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                                    }) {
+                                        Icon(
+                                            Icons.Default.LocationOn,
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .border(1.dp, Color.Black, CircleShape)
+                                                .padding(8.dp)
+                                        )
+                                    }
+                                }
+                            }
                         }
-                        Text("اتصال اینترنت خود را بررسی کنید")
+
+                        if (observerInternet.value &&isGpsEnabled.value){
+                            LottieAnimation(
+                                composition = composition,
+                                iterations = Int.MAX_VALUE,
+                                modifier = Modifier.size(290.dp, 30.dp),
+                                contentScale = ContentScale.FillWidth,
+                                speed = 0.6f
+                            )
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        val errorMessage = when {
+                            !observerInternet.value && !isGpsEnabled.value -> "اتصال اینترنت و لوکیشن خود را بررسی کنید"
+                            !observerInternet.value -> "اتصال اینترنت خود را بررسی کنید"
+                            !isGpsEnabled.value -> "لوکیشن خود را بررسی کنید"
+                            else -> ""
+                        }
+
+                        if (errorMessage.isNotEmpty()) {
+                            Text(
+                                text = errorMessage,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
-
                 }
-
             }
         }
     }
+
+    LaunchedEffect(observerInternet.value, isGpsEnabled.value) {
+        if (observerInternet.value && isGpsEnabled.value) {
+            delay(2500)
+            navController.navigate("home") {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
+
 }
 
+@Composable
+fun rememberGpsState(context: Context): Boolean
+{
+    var isGpsEnabled by remember { mutableStateOf(false) }
+    val locationManager = remember { context.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+
+    // بررسی اولیه
+    LaunchedEffect(Unit) {
+        isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    // مدیریت listener با DisposableEffect
+    DisposableEffect(Unit) {
+        val gpsCallback = object : android.location.LocationListener {
+            override fun onLocationChanged(location: android.location.Location) {
+                isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            }
+
+            override fun onProviderEnabled(provider: String) {
+                if (provider == LocationManager.GPS_PROVIDER) isGpsEnabled = true
+            }
+
+            override fun onProviderDisabled(provider: String) {
+                if (provider == LocationManager.GPS_PROVIDER) isGpsEnabled = false
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: android.os.Bundle?) {}
+        }
+
+        try {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000L,
+                0f,
+                gpsCallback
+            )
+        } catch (_: SecurityException) {
+            // دسترسی لوکیشن داده نشده
+        }
+
+        onDispose {
+            locationManager.removeUpdates(gpsCallback)
+        }
+    }
+
+    return isGpsEnabled
+}
 

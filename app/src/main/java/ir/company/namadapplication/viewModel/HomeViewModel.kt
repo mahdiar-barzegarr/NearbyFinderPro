@@ -12,7 +12,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(): ViewModel() {
 
 
-    private val _data = MutableStateFlow<List<LocationModel>>(LocationData.locationList)
+    private val _data = MutableStateFlow<List<LocationModel>>(LocationData.locationCategoriesList)
     val data: StateFlow<List<LocationModel>> = _data
 
 }
