@@ -3,32 +3,26 @@ package ir.company.namadapplication.ui.screen
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -49,10 +42,29 @@ fun Subcategories(
     id: String
 ) {
     val locationId = id.toIntOrNull() ?: 1
+    val context = LocalContext.current
 
-    viewModel.loadSubcategories(locationId)
+    // 🔹 فرض: لوکیشن کاربر رو داری
+    val userLat = 32.7114088
+    val userLng = 51.6400845
+
+    LaunchedEffect(locationId) {
+        viewModel.loadSubcategories(locationId)
+    }
 
     val subcategories by viewModel.data.collectAsState()
+    val nearestPlaceName by viewModel.nearestPlaceName.collectAsState()
+
+    // 🔹 وقتی API جواب داد → مسیریاب باز بشه
+    LaunchedEffect(nearestPlaceName) {
+        nearestPlaceName?.let { placeName ->
+            val uri = Uri.parse("geo:0,0?q=$placeName")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            context.startActivity(
+                Intent.createChooser(intent, "انتخاب مسیریاب")
+            )
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -61,54 +73,40 @@ fun Subcategories(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            Column(
-                modifier = Modifier.padding(top = 30.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "انتخاب نزدیک ترین مکان", color = Color.DarkGray, fontSize = 18.sp
-                )
-                Canvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                ) {
-                    drawLine(
-                        brush = Brush.linearGradient(
-                            colors = listOf(Color.Transparent, Color.Black, Color.Transparent)
-                        ),
-                        start = Offset(0f, size.height / 2),
-                        end = Offset(size.width, size.height / 2),
-                        strokeWidth = 8f,
-                        cap = StrokeCap.Round
-                    )
-                }
-            }
-        }
 
         items(subcategories) { item ->
-            SubCategoriesBox(item.location, item.icon, item.color)
+            SubCategoriesBox(
+                title = item.title,
+                icon = item.icon,
+                color = item.color,
+                onClick = {
+                    // 🔥 کلیک اصلی
+                    viewModel.findNearestPlace(
+                        apiCategory = item.apiCategory, // خیلی مهم
+                        lat = userLat,
+                        lng = userLng
+                    )
+                }
+            )
         }
     }
 }
 
 @Composable
-fun SubCategoriesBox(title: String, icon: Int, color: Color) {
+fun SubCategoriesBox(
+    title: String,
+    icon: Int,
+    color: Color,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(168.dp)
             .padding(horizontal = 12.dp)
-            .clickable{
-
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = color
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp, pressedElevation = 12.dp
-        )
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = color),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Row(
             modifier = Modifier
@@ -117,7 +115,8 @@ fun SubCategoriesBox(title: String, icon: Int, color: Color) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            androidx.compose.foundation.Image(
+
+            Image(
                 painter = painterResource(icon),
                 contentDescription = null,
                 modifier = Modifier.size(80.dp)
@@ -127,30 +126,22 @@ fun SubCategoriesBox(title: String, icon: Int, color: Color) {
                 title,
                 fontSize = 22.sp,
                 fontWeight = FontWeight(600),
-                fontFamily = FontFamily.Serif,
-                color = Color(0xff1A1A1A),
-                textAlign = TextAlign.End,
-                modifier = Modifier.fillMaxWidth(0.8f)
+                color = Color.Black
             )
 
-            androidx.compose.material3.Icon(
+            Icon(
                 Icons.Default.KeyboardArrowRight,
-                contentDescription = "",
-                modifier = Modifier.size(30.dp),
-                tint = Color.DarkGray
+                contentDescription = null
             )
-
-
         }
     }
-
 }
 
-@Preview(
-    showBackground = true, showSystemUi = true
-)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun Subcategories() {
-    Subcategories(rememberNavController(), id = "")
+fun SubcategoriesPreview() {
+    Subcategories(
+        navController = rememberNavController(),
+        id = "1"
+    )
 }
-

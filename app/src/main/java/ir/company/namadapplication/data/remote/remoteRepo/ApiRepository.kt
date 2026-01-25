@@ -36,4 +36,24 @@ class ApiRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun getNearbyPlaceName(
+        category: String,
+        lat: Double,
+        lng: Double
+    ): Result<String?> {
+        return safeGetData {
+            val response = apiService.getNearbyPlaces(
+                categories = category,
+                filter = "circle:$lng,$lat,5000",
+                limit = 1,
+                apiKey = "7cbd40a6530344b1ad1826fb108f26fa"
+            )
+
+            response.features
+                .firstOrNull()
+                ?.properties
+                ?.name
+        }
+    }
 }
