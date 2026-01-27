@@ -2,6 +2,7 @@ package ir.company.namadapplication.ui.screen
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,7 +45,6 @@ fun Subcategories(
     val locationId = id.toIntOrNull() ?: 1
     val context = LocalContext.current
 
-    // 🔹 فرض: لوکیشن کاربر رو داری
     val userLat = 32.7114088
     val userLng = 51.6400845
 
@@ -54,8 +54,10 @@ fun Subcategories(
 
     val subcategories by viewModel.data.collectAsState()
     val nearestPlaceName by viewModel.nearestPlaceName.collectAsState()
+    val lastLocation by viewModel.lastLocation.collectAsState()
 
-    // 🔹 وقتی API جواب داد → مسیریاب باز بشه
+
+
     LaunchedEffect(nearestPlaceName) {
         nearestPlaceName?.let { placeName ->
             val uri = Uri.parse("geo:0,0?q=$placeName")
@@ -80,11 +82,10 @@ fun Subcategories(
                 icon = item.icon,
                 color = item.color,
                 onClick = {
-                    // 🔥 کلیک اصلی
                     viewModel.findNearestPlace(
-                        apiCategory = item.apiCategory, // خیلی مهم
-                        lat = userLat,
-                        lng = userLng
+                        apiCategory = item.apiCategory,
+                        lat = lastLocation?.lat ?: 0.0,
+                        lng = lastLocation?.lng ?: 0.0
                     )
                 }
             )
