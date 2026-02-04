@@ -37,56 +37,7 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    @SuppressLint("UseKtx")
-    @Composable
-    fun TestScreen() {
 
-        val context = LocalContext.current
-
-        // مختصات مبدأ
-        val lat = 32.7114088
-        val lon = 51.6400845
-
-//        // نام مقصد برای جستجو
-//        val destinationQuery = "بیمارستان سوانح سوختگی امام موسی کاظم"
-//
-//        // Intent برای گوگل مپ یا هر برنامه مسیریابی که geo: رو پشتیبانی کنه
-//        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:$lat,$lon?q=$destinationQuery"))
-
-        val destinationQuery = "بیمارستان سوانح سوختگی امام موسی کاظم"
-
-// فقط متن جستجو، بدون مختصات
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("geo:0,0?q=$destinationQuery")
-        )
-
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(
-                onClick = {
-                    try {
-                        // استاندارد اندروید: مستقیماً startActivity و در صورت نبود برنامه catch کن
-                        context.startActivity(
-                            Intent.createChooser(intent, "انتخاب برنامه مسیریابی")
-                        )
-                    } catch (e: ActivityNotFoundException) {
-                        // هیچ برنامه مسیریابی نصب نیست
-                        Toast.makeText(
-                            context,
-                            "هیچ برنامه مسیریابی‌ای نصب نیست",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            ) {
-                Text("نمایش مسیر")
-            }
-        }
-    }
 
 
 

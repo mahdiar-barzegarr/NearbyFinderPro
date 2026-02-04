@@ -38,7 +38,9 @@ class SubcategoriesViewModel @Inject constructor(
     fun loadSubcategories(locationId: Int) {
         _data.value = when (locationId) {
             1 -> LocationData.locationHospitalList
-            2 -> LocationData.restaurantList
+            2 -> LocationData.carServiceList
+            3 -> LocationData.restaurantList
+            4 -> LocationData.hotelList
             else -> emptyList()
         }
     }
