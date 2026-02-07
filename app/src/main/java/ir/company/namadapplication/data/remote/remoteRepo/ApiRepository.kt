@@ -4,6 +4,7 @@ import android.net.http.HttpException
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
+import com.google.gson.Gson
 import ir.company.namadapplication.data.remote.api.ApiService
 import ir.company.namadapplication.data.remote.remoteModel.PlacesResponse
 import java.io.IOException
@@ -15,45 +16,37 @@ class ApiRepository @Inject constructor(
     private val apiService: ApiService
 ) {
 
-    suspend fun getNearbyHospitals(
+    suspend fun getNearbyPlaceName(
+        layer: String,
         lat: Double,
         lng: Double
-    ): Result<PlacesResponse> {
-        return safeGetData {
-            apiService.getNearbyPlaces(
-                categories = "healthcare.hospital",
-                filter = "circle:$lng,$lat,5000",
-                limit = 5,
-                apiKey = "7cbd40a6530344b1ad1826fb108f26fa"
-            )
-        }
-    }
-
-    suspend fun <T> safeGetData(request: suspend () -> T): Result<T> {
+    ): Result<String> {
         return try {
-            Result.success(request())
+            val response = apiService.getNearbyPlaces(
+                location = "$lat,$lng",
+                layer = layer,
+                searchRadius = 5000
+            )
+
+            if (response.isSuccessful) {
+                // درخواست موفق
+                val body = response.body()
+                Log.d("API_BODY", Gson().toJson(body))
+                Result.success(body?.features?.firstOrNull()?.properties?.name ?: "No name found")
+            } else {
+                // درخواست ناموفق، خواندن ارور کامل
+                val errorJson = response.errorBody()?.string()
+                Log.e("API_ERROR_BODY", errorJson ?: "Unknown error")
+                Result.failure(Exception(errorJson ?: "Unknown error"))
+            }
+
         } catch (e: Exception) {
+            // خطای شبکه یا parse
+            Log.e("API_EXCEPTION", e.toString())
             Result.failure(e)
         }
     }
 
-    suspend fun getNearbyPlaceName(
-        category: String,
-        lat: Double,
-        lng: Double
-    ): Result<String?> {
-        return safeGetData {
-            val response = apiService.getNearbyPlaces(
-                categories = category,
-                filter = "circle:$lng,$lat,5000",
-                limit = 1,
-                apiKey = "7cbd40a6530344b1ad1826fb108f26fa"
-            )
 
-            response.features
-                .firstOrNull()
-                ?.properties
-                ?.name
-        }
-    }
 }
+

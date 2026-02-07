@@ -2,6 +2,7 @@ package ir.company.namadapplication.ui.screen
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -97,7 +98,7 @@ fun Subcategories(
                         viewModel.findNearestPlace(
                             apiCategory = item.apiCategory,
                             lat = lastLocation?.lat ?: 0.0,
-                            lng = lastLocation?.lng ?: 0.0
+                            lng = lastLocation?.lng ?: 0.0,
                         )
                     }
                 )

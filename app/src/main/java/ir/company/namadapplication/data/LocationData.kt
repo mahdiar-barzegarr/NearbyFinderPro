@@ -22,19 +22,19 @@ object LocationData {
     val locationHospitalList = listOf(
         SubCategoriesModel(
             title = "بیمارستان",
-            apiCategory = "healthcare.hospital",
+            apiCategory = "hospital",
             icon = R.drawable.hospital,
             color = Color(0xffFFECEC)
         ),
         SubCategoriesModel(
             title = "داروخانه",
-            apiCategory = "healthcare.parmecy",
+            apiCategory = "pharmacy",
             icon = R.drawable.drugstore,
             color = Color(0xffFFF2DA)
         ),
         SubCategoriesModel(
-            title = "داروخانه",
-            apiCategory = "healthcare.parmecy",
+            title = "دندانپزشکی",
+            apiCategory = "dentist",
             icon = R.drawable.drugstore,
             color = Color(0xffF2E6FF)
         )
@@ -43,19 +43,19 @@ object LocationData {
     val restaurantList = listOf(
         SubCategoriesModel(
             title = "رستوران ها",
-            apiCategory = "",
+            apiCategory = "restaurant",
             icon = R.drawable.restaurant,
             color = Color(0xffFFECEC),
         ),
         SubCategoriesModel(
             title = "کافه",
-            apiCategory = "",
+            apiCategory = "cafe",
             icon = R.drawable.cafe,
             color = Color(0xffFFECEC),
         ),
         SubCategoriesModel(
             title = "فست فود",
-            apiCategory = "",
+            apiCategory = "food_fast",
             icon = R.drawable.fastfood,
             color = Color(0xffFFECEC),
         ),
@@ -66,19 +66,19 @@ object LocationData {
             "تعمیرگاه ها",
             icon = R.drawable.repairshop,
             color = Color(0xffFFECEC),
-            apiCategory = "healthcare.hospital"
+            apiCategory = "repair_car"
         ),
         SubCategoriesModel(
             "پمپ بنزین و سوخت",
             icon = R.drawable.gasstation,
             color = Color(0xffFFF2DA),
-            apiCategory = "healthcare.hospital"
+            apiCategory = "station_gas"
         ),
         SubCategoriesModel(
             "کارواش ها",
             icon = R.drawable.carwash,
             color = Color(0xffF2E6FF),
-            apiCategory = "healthcare.hospital"
+            apiCategory = "car_wash"
         )
     )
 
@@ -87,19 +87,19 @@ object LocationData {
             "هتل ها",
             icon =R.drawable.hotel2,
             color =Color(0xffFFECEC),
-            apiCategory = "healthcare.hospital"
+            apiCategory = "hotel"
         ),
         SubCategoriesModel(
             "مهمانسراها",
             icon = R.drawable.gust,
             color =Color(0xffFFF2DA),
-            apiCategory = "healthcare.hospital"
+            apiCategory = "lodging"
         ),
         SubCategoriesModel(
             "مسافرخانه ها",
             icon = R.drawable.motel,
             color =Color(0xffF2E6FF),
-            apiCategory = "healthcare.hospital"
+            apiCategory = "lodging"
         )
     )
 

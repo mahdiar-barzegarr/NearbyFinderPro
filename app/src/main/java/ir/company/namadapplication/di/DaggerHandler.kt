@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ir.company.namadapplication.data.remote.api.ApiService
 import jakarta.inject.Singleton
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -19,9 +20,26 @@ object DaggerHandler {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader(
+                        "Api-Key",
+                        "service.4b2c05028f4b4ad98fc2d435ab8a0b8c"
+                    )
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.geoapify.com/")
+            .baseUrl("https://api.neshan.org/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -40,3 +58,4 @@ object DaggerHandler {
         return LocationServices.getFusedLocationProviderClient(context)
     }
 }
+

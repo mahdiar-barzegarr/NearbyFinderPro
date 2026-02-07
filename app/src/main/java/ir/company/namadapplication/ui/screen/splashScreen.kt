@@ -118,6 +118,8 @@ fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Text(location.toString())
+
             Image(
                 painter = painterResource(R.drawable.icon),
                 contentDescription = null

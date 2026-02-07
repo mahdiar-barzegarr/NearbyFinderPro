@@ -1,7 +1,9 @@
 package ir.company.namadapplication.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.company.namadapplication.data.LocationData
 import ir.company.namadapplication.data.model.SubCategoriesModel
@@ -51,19 +53,37 @@ class SubcategoriesViewModel @Inject constructor(
         }
     }
 
-    fun findNearestPlace(
-        apiCategory: String,
-        lat: Double,
-        lng: Double
-    ) {
+//    fun findNearestPlace(
+//        apiCategory: String,
+//        lat: Double,
+//        lng: Double
+//    ) {
+//        viewModelScope.launch {
+//            repository.getNearbyPlaceName(
+//                category = apiCategory,
+//                lat = lat,
+//                lng = lng
+//            ).onSuccess {
+//                _nearestPlaceName.value = it
+//            }
+//        }
+//    }
+
+    fun findNearestPlace(apiCategory: String,lat: Double, lng: Double) {
         viewModelScope.launch {
             repository.getNearbyPlaceName(
-                category = apiCategory,
+                layer = apiCategory,
                 lat = lat,
                 lng = lng
             ).onSuccess {
                 _nearestPlaceName.value = it
+            }.onFailure {
+                Log.i("NEARBY_PLACE_ERROR", it.toString())  // لاگ خطا
             }
+
         }
     }
+
+
+
 }

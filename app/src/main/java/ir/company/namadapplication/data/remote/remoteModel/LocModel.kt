@@ -9,7 +9,6 @@ data class PlaceFeature(
 )
 
 data class PlaceProperties(
-    val name: String?,
-    val lat: Double,
-    val lon: Double
+    val name: String?
 )
+
