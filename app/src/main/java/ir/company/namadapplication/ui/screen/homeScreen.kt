@@ -61,7 +61,8 @@ fun HomeScreen(
             Column(
                 modifier = Modifier.padding(top = 30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            )
+            {
                 Text(
                     "NazdikYab",
                     fontSize = 32.sp,

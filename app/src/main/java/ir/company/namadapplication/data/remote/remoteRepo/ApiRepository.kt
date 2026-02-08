@@ -29,23 +29,23 @@ class ApiRepository @Inject constructor(
             )
 
             if (response.isSuccessful) {
-                // درخواست موفق
                 val body = response.body()
                 Log.d("API_BODY", Gson().toJson(body))
-                Result.success(body?.features?.firstOrNull()?.properties?.name ?: "No name found")
+
+                val nearestName = body?.layerPoints?.nearestPoints?.firstOrNull()?.name
+                Result.success(nearestName ?: "No name found")
             } else {
-                // درخواست ناموفق، خواندن ارور کامل
                 val errorJson = response.errorBody()?.string()
                 Log.e("API_ERROR_BODY", errorJson ?: "Unknown error")
                 Result.failure(Exception(errorJson ?: "Unknown error"))
             }
 
         } catch (e: Exception) {
-            // خطای شبکه یا parse
             Log.e("API_EXCEPTION", e.toString())
             Result.failure(e)
         }
     }
+
 
 
 }

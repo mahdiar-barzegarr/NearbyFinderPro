@@ -12,7 +12,7 @@ interface ApiService {
         @Query("location") location: String,
         @Query("layer") layer: String,
         @Query("searchRadius") searchRadius: Int
-    ): Response<PlacesResponse>  // <-- اینجا حتما Response<>
+    ): Response<PlacesResponse>
 }
 
 

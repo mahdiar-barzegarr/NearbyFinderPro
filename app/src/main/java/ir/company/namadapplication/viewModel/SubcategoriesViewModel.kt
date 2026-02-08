@@ -53,21 +53,6 @@ class SubcategoriesViewModel @Inject constructor(
         }
     }
 
-//    fun findNearestPlace(
-//        apiCategory: String,
-//        lat: Double,
-//        lng: Double
-//    ) {
-//        viewModelScope.launch {
-//            repository.getNearbyPlaceName(
-//                category = apiCategory,
-//                lat = lat,
-//                lng = lng
-//            ).onSuccess {
-//                _nearestPlaceName.value = it
-//            }
-//        }
-//    }
 
     fun findNearestPlace(apiCategory: String,lat: Double, lng: Double) {
         viewModelScope.launch {
@@ -78,11 +63,13 @@ class SubcategoriesViewModel @Inject constructor(
             ).onSuccess {
                 _nearestPlaceName.value = it
             }.onFailure {
-                Log.i("NEARBY_PLACE_ERROR", it.toString())  // لاگ خطا
+                Log.i("NEARBY_PLACE_ERROR", it.toString())
             }
 
         }
     }
+
+
 
 
 

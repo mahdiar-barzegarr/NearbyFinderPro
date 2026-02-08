@@ -3,12 +3,15 @@ package ir.company.namadapplication.ui.screen
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,10 +34,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,6 +86,47 @@ fun Subcategories(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(
+            modifier = Modifier.padding(top = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        )
+        {
+            Text(
+                "NazdikYab",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(
+                "پیدا کردن نزدیک ترین مکان ها به شما", color = Color.DarkGray, fontSize = 18.sp
+            )
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+            ) {
+                val strokeWidth = 8f
+
+                drawLine(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color.Transparent, Color.Black, Color.Transparent
+                        )
+                    ),
+                    start = Offset(0f, size.height / 2),
+                    end = Offset(size.width, size.height / 2),
+                    strokeWidth = strokeWidth,
+                    cap = StrokeCap.Round
+                )
+            }
+        }
+
+
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,7 +135,6 @@ fun Subcategories(
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-
 
             items(subcategories) { item ->
                 SubCategoriesBox(

@@ -1,14 +1,21 @@
 package ir.company.namadapplication.data.remote.remoteModel
 
 data class PlacesResponse(
-    val features: List<PlaceFeature>
+    val layerPoints: LayerPoints?
 )
 
-data class PlaceFeature(
-    val properties: PlaceProperties
+data class LayerPoints(
+    val nearestPoints: List<NearestPoint>?
 )
 
-data class PlaceProperties(
-    val name: String?
+data class NearestPoint(
+    val name: String?,
+    val location: LocationData?
 )
+
+data class LocationData(
+    val latitude: Double?,
+    val longitude: Double?
+)
+
 
