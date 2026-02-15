@@ -12,11 +12,13 @@ object LocationData {
         LocationModel(2, "خدمات خودرو و سوخت", R.drawable.mechanic, Color(0xffE8F9E9)),
         LocationModel(
             3,
-            "رستوران\u200Cها و کافه\u200Cها",
+            "خدمات مالی و بانکی",
             R.drawable.restaurant,
             Color(0xffFFF2DA)
         ),
-        LocationModel(4, "هتل ها و مسافرخانه ها", R.drawable.hotel, Color(0xffFFECEC)),
+        LocationModel(4, "خوراک و خرید روزمره", R.drawable.hotel, Color(0xffFFECEC)),
+        LocationModel(5, "حمل\u200Cونقل عمومی", R.drawable.hotel, Color(0xffFFECEC)),
+        LocationModel(6, "مراکز خرید و تفریح", R.drawable.hotel, Color(0xffFFECEC)),
     )
 
     val locationHospitalList = listOf(
@@ -31,45 +33,13 @@ object LocationData {
             apiCategory = "pharmacy",
             icon = R.drawable.drugstore,
             color = Color(0xffFFF2DA)
-        ),
-        SubCategoriesModel(
-            title = "درمانگاه",
-            apiCategory = "clinic",
-            icon = R.drawable.drugstore,
-            color = Color(0xFFCEBC9F)
-        ),
-        SubCategoriesModel(
-            title = "دندانپزشکی",
-            apiCategory = "dentist",
-            icon = R.drawable.drugstore,
-            color = Color(0xffF2E6FF)
         )
     )
 
-    val restaurantList = listOf(
-        SubCategoriesModel(
-            title = "رستوران ها",
-            apiCategory = "restaurant",
-            icon = R.drawable.restaurant,
-            color = Color(0xffFFECEC),
-        ),
-        SubCategoriesModel(
-            title = "کافه",
-            apiCategory = "cafe",
-            icon = R.drawable.cafe,
-            color = Color(0xffFFF2DA),
-        ),
-        SubCategoriesModel(
-            title = "فست فود",
-            apiCategory = "fast_food",
-            icon = R.drawable.fastfood,
-            color = Color(0xffF2E6FF),
-        ),
-    )
 
     val carServiceList = listOf(
         SubCategoriesModel(
-            "تعمیرگاه ها",
+            "تعمیرگاه و خدمات خودرو",
             icon = R.drawable.repairshop,
             color = Color(0xffFFECEC),
             apiCategory = "car_repair"
@@ -79,27 +49,129 @@ object LocationData {
             icon = R.drawable.gasstation,
             color = Color(0xffFFF2DA),
             apiCategory = "gas_station"
+        )
+    )
+
+    val Bank = listOf(
+        SubCategoriesModel(
+            title = "بانک",
+            apiCategory = "bank",
+            icon = R.drawable.restaurant,
+            color = Color(0xffFFECEC),
         ),
         SubCategoriesModel(
-            "کارواش ها",
-            icon = R.drawable.carwash,
-            color = Color(0xffF2E6FF),
-            apiCategory = "car_wash"
+            title = "خودپرداز",
+            apiCategory = "atm",
+            icon = R.drawable.cafe,
+            color = Color(0xffFFF2DA),
         )
     )
 
     val hotelList = listOf(
         SubCategoriesModel(
-            "هتل ها",
-            icon =R.drawable.hotel2,
-            color =Color(0xffFFECEC),
-            apiCategory = "hotel"
+            "رستوران",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "restaurant"
         ),
         SubCategoriesModel(
-            "مهمانسراها",
+            "کافیشاپ",
             icon = R.drawable.gust,
-            color =Color(0xffFFF2DA),
-            apiCategory = "lodging"
+            color = Color(0xffFFF2DA),
+            apiCategory = "cafe"
+        ),
+        SubCategoriesModel(
+            "سوپرمارکت و هایپرمارکت",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "supermarket"
+        ),
+        SubCategoriesModel(
+            "فروشگاه مواد غذایی",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "convenience-store"
+        ),
+        SubCategoriesModel(
+            "فروشگاه زنجیره\u200Cای",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "department-store"
+        ),
+        SubCategoriesModel(
+            "میوه و سبزی فروشی",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "greengrocer"
+        ),
+    )
+
+
+    val transportationList = listOf(
+        SubCategoriesModel(
+            "ایستگاه مترو",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "subway-station"
+        ),
+        SubCategoriesModel(
+            "ایستگاه اتوبوس",
+            icon = R.drawable.gust,
+            color = Color(0xffFFF2DA),
+            apiCategory = "bus-station"
+        ),
+        SubCategoriesModel(
+            "پایانه مسافربری و ایستگاه سوار",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "transit-station"
+        ),
+        SubCategoriesModel(
+            "فرودگاه",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "airport"
+        )
+    )
+
+
+
+    val entertainmentCentersList = listOf(
+        SubCategoriesModel(
+            "بازار و مرکز خرید",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "shopping-mall"
+        ),
+        SubCategoriesModel(
+            "مجتمع تجاری اداری",
+            icon = R.drawable.gust,
+            color = Color(0xffFFF2DA),
+            apiCategory = "commercial-complex"
+        ),
+        SubCategoriesModel(
+            "بازار",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "handicraft-market"
+        ),
+        SubCategoriesModel(
+            "پارک",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "park"
+        ),
+        SubCategoriesModel(
+            "سالن و پردیس سینمایی",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "cinema"
+        ),
+        SubCategoriesModel(
+            "جاذبه\u200Cهای گردشگری",
+            icon = R.drawable.hotel2,
+            color = Color(0xffFFECEC),
+            apiCategory = "interests"
         )
     )
 

@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.company.namadapplication.data.LocationData
 import ir.company.namadapplication.data.model.SubCategoriesModel
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,8 +45,9 @@ class SubcategoriesViewModel @Inject constructor(
         _data.value = when (locationId) {
             1 -> LocationData.locationHospitalList
             2 -> LocationData.carServiceList
-            3 -> LocationData.restaurantList
+            3 -> LocationData.Bank
             4 -> LocationData.hotelList
+            5-> LocationData.transportationList
             else -> emptyList()
         }
     }

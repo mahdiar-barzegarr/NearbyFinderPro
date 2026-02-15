@@ -58,15 +58,14 @@ fun HomeScreen(
             .background(Color(0xffF8FAFF))
             .windowInsetsPadding(
                 WindowInsets.systemBars
-            )
-            .padding(vertical = 12.dp),
+            ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
         item {
             Column(
-                modifier = Modifier.padding(top = 30.dp),
+                modifier = Modifier.padding(vertical = 30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {

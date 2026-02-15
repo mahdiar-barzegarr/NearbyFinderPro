@@ -78,7 +78,7 @@ fun Subcategories(
 
         location?.let { safeLocation ->
 
-            delay(1000)
+            delay(500)
 
             viewModel.openMaps(
                 context,
