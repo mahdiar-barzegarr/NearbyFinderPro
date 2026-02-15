@@ -50,6 +50,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ir.company.namadapplication.viewModel.SubcategoriesViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun Subcategories(
@@ -66,66 +67,36 @@ fun Subcategories(
     }
 
     val subcategories by viewModel.data.collectAsState()
-    val nearestPlaceName by viewModel.nearestPlaceName.collectAsState()
+    val location by viewModel.nearestLocation.collectAsState()
     val lastLocation by viewModel.lastLocation.collectAsState()
     var loadingPage by remember {
         mutableStateOf(false)
     }
 
 
+    LaunchedEffect(location) {
 
-    LaunchedEffect(nearestPlaceName) {
-        loadingPage = false
-        nearestPlaceName?.let { placeName ->
-            val uri = Uri.parse("geo:0,0?q=$placeName")
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            context.startActivity(
-                Intent.createChooser(intent, "انتخاب مسیریاب")
+        location?.let { safeLocation ->
+
+            delay(1000)
+
+            viewModel.openMaps(
+                context,
+                safeLocation.lat,
+                safeLocation.lng
             )
+
+            loadingPage = false
+
         }
+
     }
 
+
+
+
+
     Box(modifier = Modifier.fillMaxSize()) {
-
-        Column(
-            modifier = Modifier.padding(top = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        )
-        {
-            Text(
-                "NazdikYab",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                "پیدا کردن نزدیک ترین مکان ها به شما", color = Color.DarkGray, fontSize = 18.sp
-            )
-            Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-            ) {
-                val strokeWidth = 8f
-
-                drawLine(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color.Transparent, Color.Black, Color.Transparent
-                        )
-                    ),
-                    start = Offset(0f, size.height / 2),
-                    end = Offset(size.width, size.height / 2),
-                    strokeWidth = strokeWidth,
-                    cap = StrokeCap.Round
-                )
-            }
-        }
-
-
 
         LazyColumn(
             modifier = Modifier
@@ -135,6 +106,46 @@ fun Subcategories(
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
+
+            item {
+                Column(
+                    modifier = Modifier.padding(top = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                )
+                {
+                    Text(
+                        "NazdikYab",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.SansSerif,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "پیدا کردن نزدیک ترین مکان ها به شما", color = Color.DarkGray, fontSize = 18.sp
+                    )
+                    Canvas(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(20.dp)
+                    ) {
+                        val strokeWidth = 8f
+
+                        drawLine(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color.Transparent, Color.Black, Color.Transparent
+                                )
+                            ),
+                            start = Offset(0f, size.height / 2),
+                            end = Offset(size.width, size.height / 2),
+                            strokeWidth = strokeWidth,
+                            cap = StrokeCap.Round
+                        )
+                    }
+                }
+            }
 
             items(subcategories) { item ->
                 SubCategoriesBox(

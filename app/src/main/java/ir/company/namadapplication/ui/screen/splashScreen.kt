@@ -2,7 +2,10 @@ package ir.company.namadapplication.ui.screen
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.media.audiofx.Virtualizer
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -45,10 +48,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation.Settings
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
@@ -58,12 +63,20 @@ import ir.company.namadapplication.R
 import ir.company.namadapplication.ui.theme.ThemeLightColorScheme
 import ir.company.namadapplication.viewModel.SplashViewModel
 import kotlinx.coroutines.delay
+import java.util.jar.Manifest
 
 @Composable
 fun SplashScreen(
     navController: NavController,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
+
+    fun hasLocationPermission(context: Context): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
     val context = LocalContext.current
     val VazirFontFamily = FontFamily(Font(R.font.vazirmatn))
@@ -76,6 +89,11 @@ fun SplashScreen(
     val isLoading = viewModel.isLoading.collectAsState()
     val observerInternet = viewModel.observer.online.collectAsState(true)
     val isGpsEnabled = viewModel.isGpsEnabled.collectAsState()
+    var hasPermission by remember {
+        mutableStateOf(hasLocationPermission(context))
+    }
+
+
     val location by viewModel.savedLocation.collectAsState()
 
 
@@ -85,25 +103,62 @@ fun SplashScreen(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
 
-            val granted = permissions.any { it.value }
-            if (granted) {
+            hasPermission = permissions.any { it.value }
+
+            if (hasPermission) {
                 viewModel.forceCheckGps()
-                viewModel.fetchUserLocation() // ✅ مهم
+                viewModel.fetchUserLocation()
             }
         }
+
+
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+
+                hasPermission = hasLocationPermission(context)
+
+                if (hasPermission) {
+                    viewModel.forceCheckGps()
+                    viewModel.fetchUserLocation()
+                }
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+
+
+
+
 
 
 
     LaunchedEffect(Unit) {
         delay(300)
         visible = true
-        locationPermissionLauncher.launch(
-            arrayOf(
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+
+        if (!hasPermission) {
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                )
             )
-        )
+        } else {
+            viewModel.forceCheckGps()
+            viewModel.fetchUserLocation()
+        }
     }
+
 
 
     // ---------- UI ----------
@@ -117,8 +172,6 @@ fun SplashScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Text(location.toString())
 
             Image(
                 painter = painterResource(R.drawable.icon),
@@ -190,7 +243,7 @@ fun SplashScreen(
 
                                 !observerInternet.value -> {
                                     IconButton({
-                                        context.startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+                                        context.startActivity(Intent(android.provider.Settings.Panel.ACTION_INTERNET_CONNECTIVITY))
                                     }) {
                                         Icon(
                                             painter = painterResource(R.drawable.wifi),
@@ -215,10 +268,28 @@ fun SplashScreen(
                                         )
                                     }
                                 }
+
+                                !hasPermission ->{
+                                    IconButton({
+                                        val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data = Uri.fromParts("package", context.packageName, null)
+                                        }
+                                        context.startActivity(intent)
+                                    }) {
+                                        Icon(
+                                            Icons.Default.LocationOn,
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .border(1.dp, Color.Black, CircleShape)
+                                                .padding(8.dp)
+                                        )
+                                    }
+
+                                }
                             }
                         }
 
-                        if (observerInternet.value && isGpsEnabled.value) {
+                        if (observerInternet.value && isGpsEnabled.value && hasPermission) {
                             LottieAnimation(
                                 composition = composition,
                                 iterations = Int.MAX_VALUE,
@@ -234,6 +305,7 @@ fun SplashScreen(
                             !observerInternet.value && !isGpsEnabled.value -> "اتصال اینترنت و لوکیشن خود را بررسی کنید"
                             !observerInternet.value -> "اتصال اینترنت خود را بررسی کنید"
                             !isGpsEnabled.value -> "لوکیشن خود را بررسی کنید"
+                            !hasPermission -> "موبایل شما دسترسی به لوکیشن را نداده است"
                             else -> ""
                         }
 
@@ -249,15 +321,27 @@ fun SplashScreen(
         }
     }
 
-    LaunchedEffect(observerInternet.value, isGpsEnabled.value) {
-        if (observerInternet.value && isGpsEnabled.value) {
-            delay(2500)
+    LaunchedEffect(observerInternet.value, isGpsEnabled.value, hasPermission) {
+
+        if (
+            observerInternet.value &&
+            isGpsEnabled.value &&
+            hasPermission
+        ) {
+
+            delay(2000)
+
             navController.navigate("home") {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
                 launchSingleTop = true
             }
         }
     }
+
+
+
 
 }
 

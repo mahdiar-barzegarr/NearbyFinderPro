@@ -33,6 +33,12 @@ object LocationData {
             color = Color(0xffFFF2DA)
         ),
         SubCategoriesModel(
+            title = "درمانگاه",
+            apiCategory = "clinic",
+            icon = R.drawable.drugstore,
+            color = Color(0xFFCEBC9F)
+        ),
+        SubCategoriesModel(
             title = "دندانپزشکی",
             apiCategory = "dentist",
             icon = R.drawable.drugstore,
@@ -51,13 +57,13 @@ object LocationData {
             title = "کافه",
             apiCategory = "cafe",
             icon = R.drawable.cafe,
-            color = Color(0xffFFECEC),
+            color = Color(0xffFFF2DA),
         ),
         SubCategoriesModel(
             title = "فست فود",
-            apiCategory = "food_fast",
+            apiCategory = "fast_food",
             icon = R.drawable.fastfood,
-            color = Color(0xffFFECEC),
+            color = Color(0xffF2E6FF),
         ),
     )
 
@@ -66,13 +72,13 @@ object LocationData {
             "تعمیرگاه ها",
             icon = R.drawable.repairshop,
             color = Color(0xffFFECEC),
-            apiCategory = "repair_car"
+            apiCategory = "car_repair"
         ),
         SubCategoriesModel(
             "پمپ بنزین و سوخت",
             icon = R.drawable.gasstation,
             color = Color(0xffFFF2DA),
-            apiCategory = "station_gas"
+            apiCategory = "gas_station"
         ),
         SubCategoriesModel(
             "کارواش ها",
@@ -93,12 +99,6 @@ object LocationData {
             "مهمانسراها",
             icon = R.drawable.gust,
             color =Color(0xffFFF2DA),
-            apiCategory = "lodging"
-        ),
-        SubCategoriesModel(
-            "مسافرخانه ها",
-            icon = R.drawable.motel,
-            color =Color(0xffF2E6FF),
             apiCategory = "lodging"
         )
     )

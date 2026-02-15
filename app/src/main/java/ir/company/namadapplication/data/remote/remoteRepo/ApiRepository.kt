@@ -16,11 +16,12 @@ class ApiRepository @Inject constructor(
     private val apiService: ApiService
 ) {
 
-    suspend fun getNearbyPlaceName(
+    suspend fun getNearbyPlaceLocation(
         layer: String,
         lat: Double,
         lng: Double
-    ): Result<String> {
+    ): Result<Pair<Double, Double>> {
+
         return try {
             val response = apiService.getNearbyPlaces(
                 location = "$lat,$lng",
@@ -32,8 +33,25 @@ class ApiRepository @Inject constructor(
                 val body = response.body()
                 Log.d("API_BODY", Gson().toJson(body))
 
-                val nearestName = body?.layerPoints?.nearestPoints?.firstOrNull()?.name
-                Result.success(nearestName ?: "No name found")
+                val nearestLocation =
+                    body?.layerPoints
+                        ?.nearestPoints
+                        ?.firstOrNull()
+                        ?.location
+
+                if (nearestLocation?.latitude != null &&
+                    nearestLocation.longitude != null
+                ) {
+                    Result.success(
+                        Pair(
+                            nearestLocation.latitude,
+                            nearestLocation.longitude
+                        )
+                    )
+                } else {
+                    Result.failure(Exception("No location found"))
+                }
+
             } else {
                 val errorJson = response.errorBody()?.string()
                 Log.e("API_ERROR_BODY", errorJson ?: "Unknown error")
@@ -45,6 +63,7 @@ class ApiRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
 
 
 

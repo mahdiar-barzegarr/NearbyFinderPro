@@ -18,4 +18,10 @@ data class LocationData(
     val longitude: Double?
 )
 
+data class LatLng(
+    val lat: Double,
+    val lng: Double
+)
+
+
 

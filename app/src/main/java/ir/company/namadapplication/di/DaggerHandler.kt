@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ir.company.namadapplication.BuildConfig
 import ir.company.namadapplication.data.remote.api.ApiService
 import jakarta.inject.Singleton
 import okhttp3.OkHttpClient
@@ -26,7 +27,7 @@ object DaggerHandler {
                 val request = chain.request().newBuilder()
                     .addHeader(
                         "Api-Key",
-                        "service.4b2c05028f4b4ad98fc2d435ab8a0b8c"
+                        BuildConfig.API_KEY
                     )
                     .build()
                 chain.proceed(request)

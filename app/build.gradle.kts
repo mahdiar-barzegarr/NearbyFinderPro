@@ -11,6 +11,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        buildConfigField ("String", "API_KEY", "\"service.4b2c05028f4b4ad98fc2d435ab8a0b8c\"")
         applicationId = "ir.company.namadapplication"
         minSdk = 24
         targetSdk = 36
@@ -38,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

@@ -29,22 +29,26 @@ import ir.company.namadapplication.R
 
 @Composable
 fun LoadingOverlay() {
+
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.loading)
     )
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .zIndex(1f)
-            .background(Color.White.copy(alpha = 0.6f))
-            .blur(12.dp)
-            ,
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize()
     ) {
 
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(Color.White.copy(alpha = 0.6f))
+                .blur(12.dp)
+        )
+
         Card(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFFF2F2F2)
@@ -77,6 +81,7 @@ fun LoadingOverlay() {
         }
     }
 }
+
 
 
 @Preview(
