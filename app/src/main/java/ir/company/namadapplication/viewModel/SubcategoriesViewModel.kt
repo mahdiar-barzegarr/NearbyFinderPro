@@ -48,6 +48,7 @@ class SubcategoriesViewModel @Inject constructor(
             3 -> LocationData.Bank
             4 -> LocationData.hotelList
             5-> LocationData.transportationList
+            6-> LocationData.entertainmentCentersList
             else -> emptyList()
         }
     }

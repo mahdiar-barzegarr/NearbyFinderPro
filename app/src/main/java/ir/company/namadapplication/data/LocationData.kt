@@ -17,8 +17,8 @@ object LocationData {
             Color(0xffFFF2DA)
         ),
         LocationModel(4, "خوراک و خرید روزمره", R.drawable.hotel, Color(0xffFFECEC)),
-        LocationModel(5, "حمل\u200Cونقل عمومی", R.drawable.hotel, Color(0xffFFECEC)),
-        LocationModel(6, "مراکز خرید و تفریح", R.drawable.hotel, Color(0xffFFECEC)),
+        LocationModel(5, "حمل\u200Cونقل عمومی", R.drawable.hotel, Color(0xffFFF4E6)),
+        LocationModel(6, "مراکز خرید و تفریح", R.drawable.hotel, Color(0xffFFF0F6)),
     )
 
     val locationHospitalList = listOf(
@@ -83,25 +83,25 @@ object LocationData {
         SubCategoriesModel(
             "سوپرمارکت و هایپرمارکت",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
+            color = Color(0xffE8FFF8),
             apiCategory = "supermarket"
         ),
         SubCategoriesModel(
             "فروشگاه مواد غذایی",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
-            apiCategory = "convenience-store"
+            color = Color(0xffF3E8FF),
+            apiCategory = "convenience_store"
         ),
         SubCategoriesModel(
             "فروشگاه زنجیره\u200Cای",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
-            apiCategory = "department-store"
+            color = Color(0xffFFF0F6),
+            apiCategory = "department_store"
         ),
         SubCategoriesModel(
             "میوه و سبزی فروشی",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
+            color = Color(0xffFFF4E6),
             apiCategory = "greengrocer"
         ),
     )
@@ -112,25 +112,19 @@ object LocationData {
             "ایستگاه مترو",
             icon = R.drawable.hotel2,
             color = Color(0xffFFECEC),
-            apiCategory = "subway-station"
+            apiCategory = "subway_station"
         ),
         SubCategoriesModel(
             "ایستگاه اتوبوس",
             icon = R.drawable.gust,
             color = Color(0xffFFF2DA),
-            apiCategory = "bus-station"
+            apiCategory = "bus_station"
         ),
         SubCategoriesModel(
             "پایانه مسافربری و ایستگاه سوار",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
-            apiCategory = "transit-station"
-        ),
-        SubCategoriesModel(
-            "فرودگاه",
-            icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
-            apiCategory = "airport"
+            color = Color(0xffE8FFF8),
+            apiCategory = "transit_station"
         )
     )
 
@@ -141,37 +135,37 @@ object LocationData {
             "بازار و مرکز خرید",
             icon = R.drawable.hotel2,
             color = Color(0xffFFECEC),
-            apiCategory = "shopping-mall"
+            apiCategory = "shopping_mall"
         ),
         SubCategoriesModel(
             "مجتمع تجاری اداری",
             icon = R.drawable.gust,
             color = Color(0xffFFF2DA),
-            apiCategory = "commercial-complex"
+            apiCategory = "commercial_complex"
         ),
         SubCategoriesModel(
             "بازار",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
-            apiCategory = "handicraft-market"
+            color = Color(0xffE8FFF8),
+            apiCategory = "market_handicraft"
         ),
         SubCategoriesModel(
             "پارک",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
+            color = Color(0xffFFF4E6),
             apiCategory = "park"
         ),
         SubCategoriesModel(
             "سالن و پردیس سینمایی",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
+            color = Color(0xffFFF0F6),
             apiCategory = "cinema"
         ),
         SubCategoriesModel(
             "جاذبه\u200Cهای گردشگری",
             icon = R.drawable.hotel2,
-            color = Color(0xffFFECEC),
-            apiCategory = "interests"
+            color = Color(0xffEFFFFF),
+            apiCategory = "natural_feature"
         )
     )
 
