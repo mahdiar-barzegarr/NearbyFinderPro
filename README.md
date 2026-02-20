@@ -12,7 +12,6 @@
 
 ![App Screenshot](images/screenshot.png)
 
-> ✅ توجه: توضیح مرحله‌ای گذاشتن عکس در پایین هست.
 
 ---
 
