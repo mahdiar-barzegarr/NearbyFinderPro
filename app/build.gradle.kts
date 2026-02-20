@@ -6,12 +6,14 @@ plugins {
     alias(libs.plugins.dagger.plugin)
 }
 
+val apiKey = project.findProperty("API_KEY") as String
+
 android {
     namespace = "ir.company.namadapplication"
     compileSdk = 36
 
     defaultConfig {
-        buildConfigField ("String", "API_KEY", "\"service.4b2c05028f4b4ad98fc2d435ab8a0b8c\"")
+        buildConfigField ("String", "API_KEY", "\"$apiKey\"")
         applicationId = "ir.company.namadapplication"
         minSdk = 24
         targetSdk = 36
