@@ -23,11 +23,7 @@
 
 ---
 
-app/
- ├─ data/           # Data models & repository
- ├─ ui/             # Compose screens
- ├─ utils/          # Helpers & permissions
- └─ MainActivity.kt
+app/ ├─ data/ # Data models & repository ├─ ui/ # Compose screens ├─ utils/ # Helpers & permissions └─ MainActivity.kt
 
  ---
 
