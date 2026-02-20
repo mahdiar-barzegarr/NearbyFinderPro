@@ -10,7 +10,9 @@
 
 ## 📸 App Screenshot
 
-![App Screenshot](images/screenshot.png)
+![App Screenshot](homePage.png)
+![App Screenshot](subCatrgory.png)
+
 
 
 ---
