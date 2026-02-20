@@ -11,7 +11,7 @@
 ## 📸 App Screenshot
 
 ![App Screenshot](homePage.png)
-![App Screenshot](subCatrgory.png)
+![App Screenshot](subCategory.png)
 
 
 
