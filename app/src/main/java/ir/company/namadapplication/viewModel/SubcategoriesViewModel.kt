@@ -14,8 +14,10 @@ import ir.company.namadapplication.data.model.UserLocation
 import ir.company.namadapplication.data.remote.remoteModel.LatLng
 import ir.company.namadapplication.data.remote.remoteRepo.ApiRepository
 import ir.company.namadapplication.utilities.LocationDataSource
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,6 +37,8 @@ class SubcategoriesViewModel @Inject constructor(
     private val _lastLocation = MutableStateFlow<UserLocation?>(null)
     val lastLocation = _lastLocation.asStateFlow()
 
+    private val _error = MutableSharedFlow<String>()
+    val error = _error.asSharedFlow()
 
 
     init {
@@ -47,12 +51,12 @@ class SubcategoriesViewModel @Inject constructor(
             2 -> LocationData.EntertainmentList
             3 -> LocationData.RestaurantList
             4 -> LocationData.CarServiceList
-            5-> LocationData.entertainmentCentersList
-            6-> LocationData.HotelList
-            7-> LocationData.CommercialList
-            8-> LocationData.CulturalList
-            9-> LocationData.TransportList
-            10-> LocationData.PublicServicesList
+            5 -> LocationData.entertainmentCentersList
+            6 -> LocationData.HotelList
+            7 -> LocationData.CommercialList
+            8 -> LocationData.CulturalList
+            9 -> LocationData.TransportList
+            10 -> LocationData.PublicServicesList
             else -> emptyList()
         }
     }
@@ -81,6 +85,7 @@ class SubcategoriesViewModel @Inject constructor(
 
             }.onFailure {
                 Log.i("NEARBY_PLACE_ERROR", it.toString())
+                _error.emit("مکانی پیدا نشد")
             }
         }
     }
@@ -88,50 +93,19 @@ class SubcategoriesViewModel @Inject constructor(
 
     fun openMaps(context: Context, lat: Double, lng: Double) {
 
-        val intents = mutableListOf<Intent>()
-
-        // 🔹 لینک عمومی (برای همه اپ‌های نقشه)
         val geoIntent = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("geo:$lat,$lng?q=$lat,$lng")
         )
 
-        // 🔹 دیپ لینک اختصاصی نشان
-        val neshanIntent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("neshan://navigation?destination=$lat,$lng")
-        ).apply {
-            setPackage("org.neshan.maps") // پکیج نشان
-        }
-
-        // اگر نشان نصب بود اضافه کن
-        if (neshanIntent.resolveActivity(context.packageManager) != null) {
-            intents.add(neshanIntent)
-        }
-
-        // chooser اصلی
-        val chooser = Intent.createChooser(geoIntent, "انتخاب مسیریاب").apply {
-            putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toTypedArray())
-        }
-
         try {
-            context.startActivity(chooser)
+            context.startActivity(
+                Intent.createChooser(geoIntent, "Open with")
+            )
         } catch (e: Exception) {
             Toast.makeText(context, "هیچ مسیریابی نصب نیست", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

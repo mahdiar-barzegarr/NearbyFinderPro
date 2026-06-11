@@ -3,6 +3,7 @@ package ir.company.namadapplication.ui.screen
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,12 +16,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import ir.company.namadapplication.R
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -34,10 +39,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -49,7 +59,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ir.company.namadapplication.utilities.AppText
 import ir.company.namadapplication.viewModel.SubcategoriesViewModel
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.delay
 
 @Composable
@@ -72,6 +84,8 @@ fun Subcategories(
     var loadingPage by remember {
         mutableStateOf(false)
     }
+    var showFailedLocate by remember { mutableStateOf(false) }
+
 
 
     LaunchedEffect(location) {
@@ -93,6 +107,18 @@ fun Subcategories(
     }
 
 
+    LaunchedEffect(loadingPage) {
+        if (loadingPage) {
+            delay(6000)
+            if (location == null) {
+                loadingPage = false
+                showFailedLocate = true
+            }
+        }
+    }
+
+
+
 
 
 
@@ -101,7 +127,7 @@ fun Subcategories(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xffF8FAFF)),
+                .background(Color(0xffffedd4)),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         )
@@ -113,17 +139,18 @@ fun Subcategories(
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    Text(
+                    AppText(
                         "NazdikYab",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.SansSerif,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        "پیدا کردن نزدیک ترین مکان ها به شما", color = Color.DarkGray, fontSize = 18.sp
+                        "پیدا کردن نزدیک ترین مکان ها به شما",
+                        color = Color.DarkGray,
+                        fontSize = 18.sp
                     )
                     Canvas(
                         modifier = Modifier
@@ -166,6 +193,19 @@ fun Subcategories(
         if (loadingPage) {
             LoadingOverlay()
         }
+        if (showFailedLocate) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(radiusX = 20.dp, radiusY = 20.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
+                    .background(Color.Black.copy(alpha = 0.45f)),
+                contentAlignment = Alignment.Center
+            ) {
+                FailedLocate(
+                    onDismiss = { showFailedLocate = false }
+                )
+            }
+        }
     }
 
 
@@ -201,7 +241,7 @@ fun SubCategoriesBox(
                 modifier = Modifier.size(80.dp)
             )
 
-            Text(
+            AppText(
                 title,
                 fontSize = 22.sp,
                 fontWeight = FontWeight(600),
@@ -216,11 +256,110 @@ fun SubCategoriesBox(
     }
 }
 
+
+@Composable
+fun FailedLocate(
+    onDismiss: () -> Unit,
+    image: Painter = painterResource(id = R.drawable.search_location)
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(24.dp))
+                .background(
+                    color = Color.White
+                )
+                .then(
+                    Modifier.background(
+                        color = Color.Transparent
+                    )
+                )
+
+                .padding(1.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        color = Color(0xFFFFFFFF).copy(alpha = 0.18f)
+                    )
+                    .padding(horizontal = 24.dp, vertical = 28.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+
+                    Image(
+                        painter = image,
+                        contentDescription = "Location not found",
+                        modifier = Modifier
+                            .size(120.dp),
+                        contentScale = ContentScale.Fit
+                    )
+
+
+                    Text(
+                        text = "!مکانی پیدا نشد",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center
+                    )
+
+                    AppText(
+                        text = "در محدوده شما مکانی پیدا نشد",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xffffedd4),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        AppText(
+                            text = "بستن",
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SubcategoriesPreview() {
-    Subcategories(
-        navController = rememberNavController(),
-        id = "1"
-    )
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        FailedLocate({})
+    }
+
 }

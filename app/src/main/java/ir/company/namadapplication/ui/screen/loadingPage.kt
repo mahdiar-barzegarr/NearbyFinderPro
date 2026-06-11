@@ -26,6 +26,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import ir.company.namadapplication.R
+import ir.company.namadapplication.utilities.AppText
 
 @Composable
 fun LoadingOverlay() {
@@ -73,7 +74,7 @@ fun LoadingOverlay() {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
+                AppText(
                     text = "لطفا منتظر بمانید",
                     color = Color.DarkGray
                 )

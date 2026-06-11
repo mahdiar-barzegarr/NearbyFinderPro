@@ -1,7 +1,6 @@
 package ir.company.namadapplication.viewModel
 
 import android.content.Context
-import android.location.Location
 import android.location.LocationManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

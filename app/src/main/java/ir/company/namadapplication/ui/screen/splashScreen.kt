@@ -61,6 +61,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import ir.company.namadapplication.R
 import ir.company.namadapplication.ui.theme.ThemeLightColorScheme
+import ir.company.namadapplication.utilities.AppText
 import ir.company.namadapplication.viewModel.SplashViewModel
 import kotlinx.coroutines.delay
 import java.util.jar.Manifest
@@ -137,11 +138,6 @@ fun SplashScreen(
 
 
 
-
-
-
-
-
     LaunchedEffect(Unit) {
         delay(300)
         visible = true
@@ -180,12 +176,11 @@ fun SplashScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            Text(
-                text = "MakanYab",
+            AppText(
+                text = "NazdikYab",
                 color = ThemeLightColorScheme.secondary,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = VazirFontFamily,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
@@ -310,7 +305,7 @@ fun SplashScreen(
                         }
 
                         if (errorMessage.isNotEmpty()) {
-                            Text(
+                            AppText(
                                 text = errorMessage,
                                 textAlign = TextAlign.Center
                             )
