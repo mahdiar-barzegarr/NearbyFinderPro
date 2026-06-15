@@ -103,7 +103,7 @@ fun HomeScreen(
         items(titleData) {
             TitleBox(it.name, it.iconRes, it.color, {
                 navController.navigate(
-                    Screens.Subcategories.paramsWithArgs(it.id.toString())
+                    Screens.Subcategories.paramsWithArgs(it.id.toString(),it.name)
                 )
             })
         }

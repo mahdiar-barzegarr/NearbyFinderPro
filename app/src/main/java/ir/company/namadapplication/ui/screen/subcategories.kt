@@ -18,7 +18,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import ir.company.namadapplication.R
 import ir.company.namadapplication.utilities.AppText
 import ir.company.namadapplication.viewModel.SubcategoriesViewModel
@@ -61,7 +68,8 @@ import kotlinx.coroutines.delay
 fun Subcategories(
     navController: NavController,
     viewModel: SubcategoriesViewModel = hiltViewModel(),
-    id: String
+    id: String,
+    title: String
 ) {
     val locationId = id.toIntOrNull() ?: 1
     val context = LocalContext.current
@@ -107,7 +115,6 @@ fun Subcategories(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -118,8 +125,45 @@ fun Subcategories(
         {
 
             item {
+
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 16.dp)
+                            .clickable {
+                                navController.popBackStack()
+                            }
+                    )
+
+                    Row(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AppText(title, color = Color.Green, fontWeight = FontWeight.Bold)
+
+                        Icon(
+                            Icons.Default.KeyboardArrowLeft,
+                            contentDescription = null
+                        )
+
+                        AppText("خانه", color = Color.Black, fontWeight = FontWeight.Bold)
+
+                        Icon(
+                            Icons.Outlined.Home,
+                            contentDescription = null
+                        )
+                    }
+                }
+
                 Column(
-                    modifier = Modifier.padding(top = 30.dp),
+                    modifier = Modifier.padding(top = 15.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
@@ -349,12 +393,5 @@ fun FailedLocate(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SubcategoriesPreview() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        FailedLocate({})
-    }
-
+    Subcategories(navController = rememberNavController(), id = "0", title = "")
 }

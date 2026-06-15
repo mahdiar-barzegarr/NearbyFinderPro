@@ -35,17 +35,27 @@ fun NavigationSetup() {
         }
 
         composable(
-            route = Screens.Subcategories.routeWithArgs("0:id"),
+            route = Screens.Subcategories.routeWithArgs("0:id", "1:title"),
             arguments = listOf(
                 navArgument("0") {
                     type = NavType.StringType
-                    defaultValue = "0"
+                    defaultValue = ""
+                },
+                navArgument("1") {
+                    type = NavType.StringType
+                    defaultValue = ""
                 }
-
             )
-        ) {
-            val id = it.arguments?.getString("0") ?: ""
-            Subcategories(navController = navController, id = id)
+        ) { backStackEntry ->
+
+            val id = backStackEntry.arguments?.getString("0") ?: ""
+            val title = backStackEntry.arguments?.getString("1") ?: ""
+
+            Subcategories(
+                navController = navController,
+                id = id,
+                title = title
+            )
         }
 
 
