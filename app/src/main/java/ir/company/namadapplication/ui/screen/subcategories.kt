@@ -1,9 +1,5 @@
 package ir.company.namadapplication.ui.screen
 
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import ir.company.namadapplication.R
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,7 +45,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,10 +52,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import ir.company.namadapplication.R
 import ir.company.namadapplication.utilities.AppText
 import ir.company.namadapplication.viewModel.SubcategoriesViewModel
-import kotlinx.coroutines.Delay
 import kotlinx.coroutines.delay
 
 @Composable
@@ -89,21 +82,12 @@ fun Subcategories(
 
 
     LaunchedEffect(location) {
-
         location?.let { safeLocation ->
-
             delay(500)
-
-            viewModel.openMaps(
-                context,
-                safeLocation.lat,
-                safeLocation.lng
-            )
-
+            viewModel.openMaps(context, safeLocation.lat, safeLocation.lng)
+            viewModel.resetNearestLocation()
             loadingPage = false
-
         }
-
     }
 
 
@@ -194,16 +178,27 @@ fun Subcategories(
             LoadingOverlay()
         }
         if (showFailedLocate) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .blur(radiusX = 20.dp, radiusY = 20.dp, edgeTreatment = BlurredEdgeTreatment.Unbounded)
-                    .background(Color.Black.copy(alpha = 0.45f)),
-                contentAlignment = Alignment.Center
-            ) {
-                FailedLocate(
-                    onDismiss = { showFailedLocate = false }
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .blur(
+                            radiusX = 20.dp,
+                            radiusY = 20.dp,
+                            edgeTreatment = BlurredEdgeTreatment.Unbounded
+                        )
+                        .background(Color.Black.copy(alpha = 0.45f))
                 )
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    FailedLocate(
+                        onDismiss = { showFailedLocate = false }
+                    )
+                }
             }
         }
     }

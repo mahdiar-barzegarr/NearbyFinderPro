@@ -67,22 +67,24 @@ class SubcategoriesViewModel @Inject constructor(
         }
     }
 
+    fun resetNearestLocation() {
+        _nearestLocation.value = null
+    }
+
 
     fun findNearestPlace(apiCategory: String, lat: Double, lng: Double) {
+        _nearestLocation.value = null
 
         viewModelScope.launch {
-
             repository.getNearbyPlaceLocation(
                 layer = apiCategory,
                 lat = lat,
                 lng = lng
             ).onSuccess { pair ->
-
                 _nearestLocation.value = LatLng(
                     lat = pair.first,
                     lng = pair.second
                 )
-
             }.onFailure {
                 Log.i("NEARBY_PLACE_ERROR", it.toString())
                 _error.emit("مکانی پیدا نشد")
