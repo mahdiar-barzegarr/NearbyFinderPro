@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -119,8 +120,21 @@ fun HomeScreen(
         }
         items(titleData) {
             TitleBox(it.name, it.iconRes, it.color, {
+                val colorsInt = it.brushColor.map { color ->
+                    color.toArgb()
+                }.toIntArray()
+
+                navController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("colors", colorsInt)
+
+
                 navController.navigate(
-                    Screens.Subcategories.paramsWithArgs(it.id.toString(), it.name)
+                    Screens.Subcategories.paramsWithArgs(
+                        it.id.toString(),
+                        it.name,
+
+                    )
                 )
             })
         }

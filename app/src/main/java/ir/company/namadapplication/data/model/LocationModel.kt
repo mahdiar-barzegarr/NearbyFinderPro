@@ -7,5 +7,6 @@ data class LocationModel(
     val id: Int,
     val name: String,
     @DrawableRes val iconRes: Int,
-    val color: Color
+    val color: Color,
+    val brushColor: List<Color>
 )

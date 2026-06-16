@@ -87,6 +87,14 @@ fun Subcategories(
     }
     var showFailedLocate by remember { mutableStateOf(false) }
 
+    val colorsInt = navController
+        .previousBackStackEntry
+        ?.savedStateHandle
+        ?.get<IntArray>("colors")
+
+    val colors = colorsInt?.map { Color(it) } ?: emptyList()
+
+
 
 
     LaunchedEffect(location) {
@@ -213,13 +221,7 @@ fun Subcategories(
                         drawPath(
                             path = path,
                             brush = Brush.horizontalGradient(
-                                listOf(
-                                    Color(0xFF34C759),
-                                    Color(0xFF84E89C),
-                                    Color(0xFFE5FFE5),
-                                    Color(0xFF84E89C),
-                                    Color(0xFF34C759)
-                                )
+                                colors
                             ),
                             style = Stroke(
                                 width = 4.dp.toPx(),

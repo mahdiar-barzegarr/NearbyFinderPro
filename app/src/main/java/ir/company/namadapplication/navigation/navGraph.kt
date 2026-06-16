@@ -1,6 +1,7 @@
 package ir.company.namadapplication.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,11 +40,9 @@ fun NavigationSetup() {
             arguments = listOf(
                 navArgument("0") {
                     type = NavType.StringType
-                    defaultValue = ""
                 },
                 navArgument("1") {
                     type = NavType.StringType
-                    defaultValue = ""
                 }
             )
         ) { backStackEntry ->
