@@ -18,10 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Button
@@ -29,6 +26,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,13 +42,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -118,7 +118,7 @@ fun Subcategories(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xffffedd4)),
+                .background(Color.White),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         )
@@ -130,34 +130,46 @@ fun Subcategories(
                     modifier = Modifier.fillMaxWidth()
                 ) {
 
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
+
+                    Surface(
                         modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(start = 16.dp)
-                            .clickable {
-                                navController.popBackStack()
-                            }
-                    )
+                            .padding(18.dp)
+                            .size(42.dp),
+                        shadowElevation = 8.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        color = Color.White
+                    ) {
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.White
+                            )
+                        ) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color(0xff1E2E46))
+                        }
+                    }
 
                     Row(
                         modifier = Modifier.align(Alignment.CenterEnd),
-                        horizontalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AppText(title, color = Color.Green, fontWeight = FontWeight.Bold)
+                    )
+                    {
+                        AppText(title, color = Color(0xff39B95C), fontWeight = FontWeight.Bold)
 
                         Icon(
-                            Icons.Default.KeyboardArrowLeft,
-                            contentDescription = null
+                            Icons.Default.KeyboardArrowRight,
+                            contentDescription = null,
+                            modifier = Modifier.padding(horizontal = 2.dp),
+                            tint = Color.Gray
                         )
 
-                        AppText("خانه", color = Color.Black, fontWeight = FontWeight.Bold)
+                        AppText("خانه", color = Color(0xff6E7B8B), fontWeight = FontWeight.Bold)
 
                         Icon(
                             Icons.Outlined.Home,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color(0xff1E2E46)
                         )
                     }
                 }
@@ -183,20 +195,36 @@ fun Subcategories(
                     Canvas(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(20.dp)
+                            .height(40.dp)
                     ) {
-                        val strokeWidth = 8f
 
-                        drawLine(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    Color.Transparent, Color.Black, Color.Transparent
+                        val path = Path().apply {
+
+                            moveTo(0f, size.height * 0.2f)
+
+                            quadraticBezierTo(
+                                size.width / 2,
+                                size.height * 1.3f,
+                                size.width,
+                                size.height * 0.2f
+                            )
+                        }
+
+                        drawPath(
+                            path = path,
+                            brush = Brush.horizontalGradient(
+                                listOf(
+                                    Color(0xFF34C759),
+                                    Color(0xFF84E89C),
+                                    Color(0xFFE5FFE5),
+                                    Color(0xFF84E89C),
+                                    Color(0xFF34C759)
                                 )
                             ),
-                            start = Offset(0f, size.height / 2),
-                            end = Offset(size.width, size.height / 2),
-                            strokeWidth = strokeWidth,
-                            cap = StrokeCap.Round
+                            style = Stroke(
+                                width = 4.dp.toPx(),
+                                cap = StrokeCap.Round
+                            )
                         )
                     }
                 }
@@ -390,8 +418,14 @@ fun FailedLocate(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun SubcategoriesPreview() {
-    Subcategories(navController = rememberNavController(), id = "0", title = "")
+    val navController = rememberNavController()
+
+    Subcategories(
+        navController = navController,
+        id = "1",
+        title = "آزمایشی"
+    )
 }

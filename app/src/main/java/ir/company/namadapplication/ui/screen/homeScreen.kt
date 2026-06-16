@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -53,7 +54,7 @@ fun HomeScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xffffedd4))
+            .background(Color.White)
             .windowInsetsPadding(
                 WindowInsets.systemBars
             )
@@ -90,7 +91,7 @@ fun HomeScreen(
 
                         quadraticBezierTo(
                             size.width / 2,
-                            size.height * 1.6f,
+                            size.height * 1.3f,
                             size.width,
                             size.height * 0.2f
                         )
@@ -98,7 +99,15 @@ fun HomeScreen(
 
                     drawPath(
                         path = path,
-                        color = Color(0xFF96EAA2),
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF34C759),
+                                Color(0xFF84E89C),
+                                Color(0xFFE5FFE5),
+                                Color(0xFF84E89C),
+                                Color(0xFF34C759)
+                            )
+                        ),
                         style = Stroke(
                             width = 4.dp.toPx(),
                             cap = StrokeCap.Round
@@ -125,7 +134,7 @@ fun TitleBox(title: String, icon: Int, color: Color, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(168.dp)
-            .padding(horizontal = 12.dp, vertical = 9.dp)
+            .padding(end = 12.dp, start = 12.dp, bottom = 18.dp)
             .clickable {
                 onClick()
             },
