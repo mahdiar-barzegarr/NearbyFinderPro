@@ -24,10 +24,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -81,20 +81,28 @@ fun HomeScreen(
                 Canvas(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(20.dp)
+                        .height(40.dp)
                 ) {
-                    val strokeWidth = 8f
 
-                    drawLine(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color.Transparent, Color.Black, Color.Transparent
-                            )
-                        ),
-                        start = Offset(0f, size.height / 2),
-                        end = Offset(size.width, size.height / 2),
-                        strokeWidth = strokeWidth,
-                        cap = StrokeCap.Round
+                    val path = Path().apply {
+
+                        moveTo(0f, size.height * 0.2f)
+
+                        quadraticBezierTo(
+                            size.width / 2,
+                            size.height * 1.6f,
+                            size.width,
+                            size.height * 0.2f
+                        )
+                    }
+
+                    drawPath(
+                        path = path,
+                        color = Color(0xFF96EAA2),
+                        style = Stroke(
+                            width = 4.dp.toPx(),
+                            cap = StrokeCap.Round
+                        )
                     )
                 }
             }
@@ -103,7 +111,7 @@ fun HomeScreen(
         items(titleData) {
             TitleBox(it.name, it.iconRes, it.color, {
                 navController.navigate(
-                    Screens.Subcategories.paramsWithArgs(it.id.toString(),it.name)
+                    Screens.Subcategories.paramsWithArgs(it.id.toString(), it.name)
                 )
             })
         }
