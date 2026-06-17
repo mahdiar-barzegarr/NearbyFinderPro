@@ -97,6 +97,7 @@ fun Subcategories(
 
 
 
+
     LaunchedEffect(location) {
         location?.let { safeLocation ->
             delay(500)
@@ -163,7 +164,7 @@ fun Subcategories(
                         verticalAlignment = Alignment.CenterVertically
                     )
                     {
-                        AppText(title, color = Color(0xff39B95C), fontWeight = FontWeight.Bold)
+                        AppText(title, color = colors[0], fontWeight = FontWeight.Bold)
 
                         Icon(
                             Icons.Default.KeyboardArrowRight,

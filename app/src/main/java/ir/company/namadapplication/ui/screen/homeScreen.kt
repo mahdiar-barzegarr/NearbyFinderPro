@@ -129,6 +129,7 @@ fun HomeScreen(
                     ?.set("colors", colorsInt)
 
 
+
                 navController.navigate(
                     Screens.Subcategories.paramsWithArgs(
                         it.id.toString(),

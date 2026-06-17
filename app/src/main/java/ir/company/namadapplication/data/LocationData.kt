@@ -9,7 +9,7 @@ object LocationData {
 
     val locationCategoriesList = listOf(
         LocationModel(
-            1, "سلامت و درمان", R.drawable.hospital, Color(0xffDCEEFF),
+            1, "سلامت و درمان", R.drawable.hospital, color = Color(0xffDCEEFF),
             listOf(
                 Color(0xffA9C9E8),
                 Color(0xffDCEEFF),
