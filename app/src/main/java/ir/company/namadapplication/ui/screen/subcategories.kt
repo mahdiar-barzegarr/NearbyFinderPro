@@ -127,6 +127,7 @@ fun Subcategories(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(top = 18.dp)
                 .background(Color.White),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally

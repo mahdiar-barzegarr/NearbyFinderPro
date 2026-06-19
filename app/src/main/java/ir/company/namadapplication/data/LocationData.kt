@@ -286,12 +286,6 @@ object LocationData {
             icon = R.drawable.parking,
             color = Color(0xffF1F4F6),
             apiCategory = "parking"
-        ),
-        SubCategoriesModel(
-            "ایستگاه قطار",
-            icon = R.drawable.train,
-            color = Color(0xffE3E9EE),
-            apiCategory = "train_station"
         )
     )
 

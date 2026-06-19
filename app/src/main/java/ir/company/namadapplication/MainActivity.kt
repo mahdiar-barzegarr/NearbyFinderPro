@@ -11,6 +11,7 @@ import ir.company.namadapplication.navigation.NavigationSetup
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             NavigationSetup()
         }

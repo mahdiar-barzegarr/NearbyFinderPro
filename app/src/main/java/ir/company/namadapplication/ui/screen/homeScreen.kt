@@ -102,11 +102,11 @@ fun HomeScreen(
                         path = path,
                         brush = Brush.horizontalGradient(
                             listOf(
-                                Color(0xFF34C759),
-                                Color(0xFF84E89C),
-                                Color(0xFFE5FFE5),
-                                Color(0xFF84E89C),
-                                Color(0xFF34C759)
+                                Color(0xFF6E6E6E),
+                                Color(0xFFB5B5B5),
+                                Color(0xFFFFFFFF),
+                                Color(0xFFB5B5B5),
+                                Color(0xFF6E6E6E)
                             )
                         ),
                         style = Stroke(
