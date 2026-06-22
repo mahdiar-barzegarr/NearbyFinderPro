@@ -92,8 +92,8 @@ fun Subcategories(
         ?.savedStateHandle
         ?.get<IntArray>("colors")
 
-    val colors = colorsInt?.map { Color(it) } ?: emptyList()
-
+    val colors = colorsInt?.map { Color(it) }?.takeIf { it.size >= 2 }
+        ?: listOf(Color(0xff1E2E46), Color(0xff4A6FA5))
 
 
 

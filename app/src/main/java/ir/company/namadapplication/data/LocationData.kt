@@ -214,13 +214,13 @@ object LocationData {
         SubCategoriesModel(
             "بازار و مرکز خرید",
             icon = R.drawable.supermarket1,
-            color = Color(0xffFFF9D9),
+            color = Color(0xffFFD2E3),
             apiCategory = "shopping_mall"
         ),
         SubCategoriesModel(
             "بازار روز و میوه تره بار",
             icon = R.drawable.stand,
-            color = Color(0xffFFF2B8),
+            color = Color(0xffFFE2EF),
             apiCategory = "vegetable_market"
         )
     )
