@@ -295,13 +295,13 @@ object LocationData {
             "اداره پست",
             icon = R.drawable.postalservice,
             color = Color(0xffF0FAF0),
-            apiCategory = "shopping_mall"
+            apiCategory = "post_office"
         ),
         SubCategoriesModel(
             "پلیس راهنمایی و رانندگی",
             icon = R.drawable.policestation,
             color = Color(0xFFE0FDE0),
-            apiCategory = "foreign_consulate"
+            apiCategory = "traffic_police"
         )
     )
 
